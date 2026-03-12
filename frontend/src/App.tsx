@@ -1,35 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useListStore } from './stores/listStore';
+import { useReminderStore } from './stores/reminderStore';
+import { useTagStore } from './stores/tagStore';
+import { useUiStore } from './stores/uiStore';
+import styles from './App.module.css';
+
+// Placeholder components - will be replaced in later tasks
+const Sidebar = () => <div>Sidebar placeholder</div>;
+const MainArea = () => <div>MainArea placeholder</div>;
+const SearchResults = () => <div>Search placeholder</div>;
+const Toast = () => null;
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { fetchLists } = useListStore();
+  const { fetchSmartListCounts } = useReminderStore();
+  const { fetchTags } = useTagStore();
+  const { toggleSidebar } = useUiStore();
+
+  useEffect(() => {
+    fetchLists();
+    fetchSmartListCounts();
+    fetchTags();
+  }, [fetchLists, fetchSmartListCounts, fetchTags]);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <BrowserRouter>
+      <div className={styles.app}>
+        <button className={styles.hamburger} onClick={toggleSidebar}>
+          ☰
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        <Sidebar />
+        <main className={styles.mainContent}>
+          <Routes>
+            <Route path="/" element={<Navigate to="/smart/all" replace />} />
+            <Route path="/list/:id" element={<MainArea />} />
+            <Route path="/smart/:type" element={<MainArea />} />
+            <Route path="/search" element={<SearchResults />} />
+          </Routes>
+        </main>
+        <Toast />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
