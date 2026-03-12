@@ -138,6 +138,7 @@ example/
 | PATCH  | `/api/reminders/{id}/position`| 순서 변경                   |
 | DELETE | `/api/reminders/{id}`         | 리마인더 삭제 (서브태스크 cascade) |
 | GET    | `/api/reminders/search?q={q}` | 검색 (아래 검색 규칙 참조)    |
+| GET    | `/api/reminders/smart/counts` | 스마트 리스트 건수 ({today, scheduled, all, flagged, completed}) |
 
 ### Lists
 | Method | Path                         | Description              |
