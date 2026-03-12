@@ -1,0 +1,19 @@
+.container {
+  padding: 0 4px;
+}
+
+.sectionHeader {
+  padding: 8px 12px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.06em;
+  user-select: none;
+}
+
+.listItems {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}

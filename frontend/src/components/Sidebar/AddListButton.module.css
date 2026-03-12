@@ -1,0 +1,140 @@
+.container {
+  padding: 8px 8px 16px;
+  margin-top: auto;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--color-blue);
+  font-family: var(--font-family);
+  border-radius: 8px;
+  width: 100%;
+  text-align: left;
+  transition: background var(--transition-fast);
+  font-weight: 400;
+}
+
+.addButton:hover {
+  background: var(--bg-hover);
+}
+
+.plusIcon {
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 300;
+  color: var(--color-blue);
+}
+
+/* Inline form */
+.form {
+  background: var(--bg-primary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid var(--border-color);
+}
+
+.nameInput {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 14px;
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color var(--transition-fast);
+}
+
+.nameInput:focus {
+  border-color: var(--color-blue);
+}
+
+.colorLabel {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.colorPicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.colorDot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.colorDot:hover {
+  transform: scale(1.15);
+}
+
+.colorDotSelected {
+  border-color: rgba(0, 0, 0, 0.3);
+  transform: scale(1.1);
+}
+
+.formActions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.cancelButton {
+  padding: 5px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  transition: background var(--transition-fast);
+}
+
+.cancelButton:hover {
+  background: var(--bg-hover);
+}
+
+.confirmButton {
+  padding: 5px 14px;
+  border: none;
+  border-radius: 6px;
+  background: var(--color-blue);
+  cursor: pointer;
+  font-size: 13px;
+  font-family: var(--font-family);
+  color: white;
+  font-weight: 500;
+  transition: opacity var(--transition-fast);
+}
+
+.confirmButton:hover {
+  opacity: 0.85;
+}
+
+.confirmButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
