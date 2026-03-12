@@ -1,0 +1,52 @@
+.button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: var(--color-blue);
+  font-size: 15px;
+  cursor: pointer;
+  padding: 12px 0;
+  font-family: var(--font-family);
+  transition: opacity var(--transition-fast);
+}
+
+.button:hover {
+  opacity: 0.7;
+}
+
+.icon {
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+/* Inline edit row */
+.addRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.checkboxPlaceholder {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--color-blue);
+  box-sizing: border-box;
+}
+
+.input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  outline: none;
+  padding: 2px 0;
+}

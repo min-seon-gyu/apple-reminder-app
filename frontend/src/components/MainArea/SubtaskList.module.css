@@ -1,0 +1,53 @@
+.subtaskList {
+  display: flex;
+  flex-direction: column;
+  padding-left: 28px;
+}
+
+.addRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+}
+
+.addIndent {
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.addInput {
+  flex: 1;
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  background: transparent;
+  font-size: 14px;
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  outline: none;
+  padding: 2px 0;
+}
+
+.addSubtaskButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 6px 0;
+  font-family: var(--font-family);
+  transition: color var(--transition-fast);
+}
+
+.addSubtaskButton:hover {
+  color: var(--text-primary);
+}
+
+.addIcon {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1;
+}
