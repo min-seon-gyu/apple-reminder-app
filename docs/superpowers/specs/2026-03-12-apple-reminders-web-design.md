@@ -8,7 +8,7 @@ Apple Reminders(macOS)의 UI를 최대한 동일하게 재현한 웹 애플리�
 ## Tech Stack
 
 - **Frontend**: React 19 + Vite + TypeScript + Zustand + CSS Modules + React Router v7
-- **Backend**: Spring Boot 3.4 + Spring Data JPA + H2 Database
+- **Backend**: Spring Boot 3.4 + Spring Data JPA + H2 Database (파일 기반 모드, 서버 재시작 시 데이터 유지)
 - **Communication**: REST API (JSON)
 
 ## Architecture
@@ -57,12 +57,20 @@ example/
 | Field     | Type     | Constraint        |
 |-----------|----------|-------------------|
 | id        | Long     | PK, auto          |
-| name      | String   | NOT NULL          |
-| color     | String   | NOT NULL          |
-| icon      | String   | NOT NULL          |
+| name      | String   | NOT NULL, max 50자 |
+| color     | String   | NOT NULL (아래 허용 값 참조) |
+| icon      | String   | NOT NULL (아래 허용 값 참조) |
 | position  | Integer  | NOT NULL          |
 | createdAt | DateTime | NOT NULL          |
 | updatedAt | DateTime | NOT NULL          |
+
+**허용 색상 (Apple System Colors):**
+`red`, `orange`, `yellow`, `green`, `cyan`, `blue`, `purple`, `pink`, `brown`, `gray`, `indigo`, `teal`
+
+**허용 아이콘:**
+`list`, `bookmark`, `pin`, `gift`, `birthday`, `work`, `school`, `home`, `shopping`, `health`, `travel`, `finance`
+
+**초기 데이터:** 앱 최초 실행 시 기본 리스트 "미리 알림" (color: blue, icon: list)을 자동 생성
 
 ### Reminder
 | Field       | Type      | Constraint                    |
@@ -83,13 +91,18 @@ example/
 | updatedAt   | DateTime  | NOT NULL                      |
 
 - `parentId` 자기참조로 서브태스크 구현 (1단계 깊이만 허용)
+  - API는 `parentId`가 이미 서브태스크인 리마인더를 가리키면 400 Bad Request 반환
+- 부모 리마인더 삭제 시 하위 서브태스크도 cascade 삭제
 - `position` 필드로 드래그 앤 드롭 순서 유지
+  - 정수 기반 정렬. `PATCH .../position`은 `{ orderedIds: [3, 1, 2] }` 형태로 해당 스코프 내 전체 순서를 받아 일괄 갱신
+- `dueTime`은 `dueDate`가 설정된 경우에만 설정 가능 (dueDate 없이 dueTime만 있으면 400 Bad Request)
+- 필드 길이 제약: `title` 최대 255자, `notes` 최대 2000자
 
 ### Tag
 | Field | Type   | Constraint       |
 |-------|--------|------------------|
 | id    | Long   | PK, auto         |
-| name  | String | NOT NULL, UNIQUE |
+| name  | String | NOT NULL, UNIQUE, max 50자 |
 
 ### ReminderTag (Join Table)
 | Field      | Type | Constraint          |
@@ -107,22 +120,24 @@ example/
 | 예정        | `dueDate IS NOT NULL AND isCompleted = false` |
 | 전체        | `isCompleted = false`                         |
 | 플래그 지정됨 | `isFlagged = true AND isCompleted = false`   |
-| 완료됨      | `isCompleted = true`                          |
+| 완료됨      | `isCompleted = true` (completedAt DESC 정렬)   |
+
+> 참고: 오늘 날짜의 리마인더는 "오늘"과 "예정" 모두에 표시된다 (Apple Reminders와 동일한 동작).
 
 ## REST API
 
 ### Reminders
 | Method | Path                          | Description                |
 |--------|-------------------------------|----------------------------|
-| GET    | `/api/reminders?listId={id}`  | 특정 리스트의 리마인더 조회 |
+| GET    | `/api/reminders?listId={id}&includeCompleted=false` | 특정 리스트의 리마인더 조회 (기본: 미완료만, includeCompleted=true로 완료 포함) |
 | GET    | `/api/reminders/smart/{type}` | 스마트 리스트 조회           |
 | GET    | `/api/reminders/{id}`         | 리마인더 상세 (서브태스크 포함) |
 | POST   | `/api/reminders`              | 리마인더 생성               |
 | PUT    | `/api/reminders/{id}`         | 리마인더 수정 (tagIds 포함)  |
 | PATCH  | `/api/reminders/{id}/complete`| 완료 토글                   |
 | PATCH  | `/api/reminders/{id}/position`| 순서 변경                   |
-| DELETE | `/api/reminders/{id}`         | 리마인더 삭제               |
-| GET    | `/api/reminders/search?q={q}` | 검색 (제목, 메모, 태그)      |
+| DELETE | `/api/reminders/{id}`         | 리마인더 삭제 (서브태스크 cascade) |
+| GET    | `/api/reminders/search?q={q}` | 검색 (아래 검색 규칙 참조)    |
 
 ### Lists
 | Method | Path                         | Description              |
@@ -131,14 +146,35 @@ example/
 | POST   | `/api/lists`                 | 리스트 생성                |
 | PUT    | `/api/lists/{id}`            | 리스트 수정                |
 | PATCH  | `/api/lists/{id}/position`   | 리스트 순서 변경            |
-| DELETE | `/api/lists/{id}`            | 리스트 삭제 (cascade)       |
+| DELETE | `/api/lists/{id}`            | 리스트 삭제 (리마인더+ReminderTag cascade, 태그 자체는 보존) |
 
 ### Tags
 | Method | Path            | Description |
 |--------|-----------------|-------------|
 | GET    | `/api/tags`     | 전체 태그 조회 |
 | POST   | `/api/tags`     | 태그 생성     |
-| DELETE | `/api/tags/{id}`| 태그 삭제     |
+| PUT    | `/api/tags/{id}`| 태그 이름 수정 |
+| DELETE | `/api/tags/{id}`| 태그 삭제 (ReminderTag cascade) |
+
+### 검색 규칙
+- 대소문자 무시 (case-insensitive), 부분 문자열 매칭 (contains)
+- 검색 대상: `title`, `notes`, 연결된 `tag.name`
+- 미완료 리마인더만 검색 (isCompleted = false)
+- 빈 쿼리(`q`)는 빈 결과 반환
+
+### 순서 변경 (Position) 규칙
+- `PATCH .../position` 엔드포인트는 `{ orderedIds: [id1, id2, ...] }` 형태의 요청을 받음
+- 해당 스코프(리스트 또는 전체) 내 모든 항목의 ID를 순서대로 포함해야 함
+- 서버는 배열 순서대로 `position` 값을 1부터 재할당
+- 서브태스크 정렬: 같은 `parentId`를 가진 형제 서브태스크 ID만 포함
+
+### Frontend Routing
+| Path              | Component      | Description          |
+|-------------------|----------------|----------------------|
+| `/`               | redirect       | `/smart/all`로 리다이렉트 |
+| `/list/:id`       | MainArea       | 사용자 리스트 보기      |
+| `/smart/:type`    | MainArea       | 스마트 리스트 보기      |
+| `/search`         | SearchResults  | 검색 결과             |
 
 ## Frontend UI Structure
 
@@ -190,9 +226,10 @@ App
 - **사이드바**: 반투명 배경 (`backdrop-filter: blur`), 부드러운 선택 하이라이트
 - **스마트 리스트 아이콘**: 각각 고유 색상의 원형 아이콘 (2x2 또는 3x2 카드 그리드)
 - **리마인더 항목**: 클릭 시 인라인 확장하여 상세 편집 (별도 모달 없음)
-- **완료 체크**: 원형 체크박스, 완료 시 부드러운 fade-out 애니메이션
+- **완료 체크**: 원형 체크박스, 완료 시 부드러운 fade-out 애니메이션 (1초 후 활성 목록에서 제거)
 - **색상 팔레트**: Apple 시스템 컬러 12색 (리스트 색상용)
 - **반응형**: 768px 이하에서 사이드바 숨김, 햄버거 메뉴로 토글
+- **빈 상태**: 리마인더가 없는 리스트는 "리마인더 없음" 안내 표시, 검색 결과 없을 시 "결과 없음" 표시
 
 ### Zustand Stores
 
@@ -213,7 +250,7 @@ uiStore: isSidebarOpen, searchQuery, isSearching
 
 ### Frontend
 - API 호출 실패 시 토스트 알림
-- Optimistic Update: 완료 체크, 순서 변경 등은 즉시 UI 반영 후 API 호출, 실패 시 롤백
+- Optimistic Update: 완료 체크, 순서 변경 등은 즉시 UI 반영 후 API 호출, 실패 시 롤백 + "업데이트 실패, 되돌렸습니다" 토스트 표시
 
 ## Testing
 
