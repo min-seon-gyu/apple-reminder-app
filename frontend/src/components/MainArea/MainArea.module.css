@@ -1,0 +1,14 @@
+.mainArea {
+  padding: 24px 32px;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-tertiary);
+  font-size: 15px;
+  margin-top: 80px;
+}

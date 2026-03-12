@@ -5,10 +5,10 @@ import { useReminderStore } from './stores/reminderStore';
 import { useTagStore } from './stores/tagStore';
 import { useUiStore } from './stores/uiStore';
 import Sidebar from './components/Sidebar/Sidebar';
+import MainArea from './components/MainArea/MainArea';
 import styles from './App.module.css';
 
 // Placeholder components - will be replaced in later tasks
-const MainArea = () => <div>MainArea placeholder</div>;
 const SearchResults = () => <div>Search placeholder</div>;
 const Toast = () => null;
 

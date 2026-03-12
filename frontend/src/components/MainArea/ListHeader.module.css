@@ -1,0 +1,23 @@
+.header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding-top: 32px;
+  padding-bottom: 8px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.count {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
