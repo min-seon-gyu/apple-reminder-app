@@ -1,0 +1,4 @@
+backend/.gradle/
+backend/build/
+backend/data/
+node_modules/
