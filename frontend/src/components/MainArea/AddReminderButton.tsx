@@ -12,6 +12,7 @@ export default function AddReminderButton({ listId, color }: AddReminderButtonPr
   const [isAdding, setIsAdding] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const isSubmitting = useRef(false);
 
   const handleButtonClick = () => {
     setIsAdding(true);
@@ -19,12 +20,15 @@ export default function AddReminderButton({ listId, color }: AddReminderButtonPr
   };
 
   const handleConfirm = async () => {
+    if (isSubmitting.current) return;
+    isSubmitting.current = true;
     if (inputValue.trim()) {
       await createReminder({ listId, title: inputValue.trim() });
       await fetchReminders(listId);
     }
     setInputValue('');
     setIsAdding(false);
+    isSubmitting.current = false;
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -36,6 +40,7 @@ export default function AddReminderButton({ listId, color }: AddReminderButtonPr
   };
 
   const handleBlur = () => {
+    if (isSubmitting.current) return;
     if (!inputValue.trim()) {
       setIsAdding(false);
     } else {

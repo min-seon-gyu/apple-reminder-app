@@ -16,6 +16,7 @@ export default function SubtaskList({ parentId, subtasks, parentListId, color }:
   const [isAdding, setIsAdding] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const isSubmitting = useRef(false);
 
   const handleAdd = () => {
     setIsAdding(true);
@@ -23,17 +24,19 @@ export default function SubtaskList({ parentId, subtasks, parentListId, color }:
   };
 
   const handleConfirm = async () => {
+    if (isSubmitting.current) return;
+    isSubmitting.current = true;
     if (inputValue.trim()) {
       await createReminder({
         listId: parentListId,
         parentId,
         title: inputValue.trim(),
       });
-      // Re-fetch to update subtasks
       await fetchReminders(parentListId);
     }
     setInputValue('');
     setIsAdding(false);
+    isSubmitting.current = false;
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -45,6 +48,7 @@ export default function SubtaskList({ parentId, subtasks, parentListId, color }:
   };
 
   const handleBlur = () => {
+    if (isSubmitting.current) return;
     if (!inputValue.trim()) {
       setIsAdding(false);
     } else {
