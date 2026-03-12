@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { Reminder, ReminderRequest, SmartListType, SmartListCounts } from '../types';
 import { reminderApi } from '../api/reminderApi';
+import { useListStore } from './listStore';
 
 interface ReminderState {
   reminders: Reminder[];
@@ -35,13 +36,16 @@ export const useReminderStore = create<ReminderState>((set, get) => ({
   },
   createReminder: async (data) => {
     await reminderApi.create(data);
-    // Re-fetch will be handled by the component
+    get().fetchSmartListCounts();
+    useListStore.getState().fetchLists();
   },
   updateReminder: async (id, data) => {
     const updated = await reminderApi.update(id, data);
     set((state) => ({
       reminders: state.reminders.map((r) => (r.id === id ? updated : r)),
     }));
+    get().fetchSmartListCounts();
+    useListStore.getState().fetchLists();
   },
   toggleComplete: async (id) => {
     // Optimistic update
@@ -53,6 +57,8 @@ export const useReminderStore = create<ReminderState>((set, get) => ({
     }));
     try {
       await reminderApi.toggleComplete(id);
+      get().fetchSmartListCounts();
+      useListStore.getState().fetchLists();
     } catch {
       set({ reminders: prev }); // Rollback
     }
@@ -63,6 +69,8 @@ export const useReminderStore = create<ReminderState>((set, get) => ({
       reminders: state.reminders.filter((r) => r.id !== id),
       selectedReminderId: state.selectedReminderId === id ? null : state.selectedReminderId,
     }));
+    get().fetchSmartListCounts();
+    useListStore.getState().fetchLists();
   },
   searchReminders: async (query) => {
     if (!query.trim()) {
