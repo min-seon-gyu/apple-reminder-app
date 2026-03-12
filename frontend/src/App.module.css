@@ -33,4 +33,8 @@
   .hamburger {
     display: block;
   }
+
+  .mainContent {
+    width: 100%;
+  }
 }
