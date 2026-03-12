@@ -1,0 +1,236 @@
+.detail {
+  padding: 16px 0 16px 48px;
+  background: var(--bg-hover);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 6px 0;
+  min-height: 32px;
+}
+
+.label {
+  flex-shrink: 0;
+  width: 80px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding-top: 4px;
+  font-weight: 500;
+}
+
+.titleInput {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  outline: none;
+  padding: 2px 0;
+  width: 100%;
+}
+
+.titleInput:focus {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.notesInput {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  outline: none;
+  padding: 2px 0;
+  resize: none;
+  width: 100%;
+  line-height: 1.5;
+}
+
+.notesInput:focus {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dateInput {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  outline: none;
+  cursor: pointer;
+  padding: 2px 0;
+}
+
+.select {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  outline: none;
+  cursor: pointer;
+  padding: 2px 0;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.flagButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  opacity: 0.3;
+  padding: 0;
+  transition: opacity var(--transition-fast);
+  line-height: 1;
+}
+
+.flagActive {
+  opacity: 1;
+}
+
+.flagButton:hover {
+  opacity: 0.7;
+}
+
+/* Tags */
+.tagsArea {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+
+.tagPill {
+  font-size: 12px;
+  background: var(--bg-selected);
+  color: var(--color-blue);
+  border: none;
+  border-radius: 20px;
+  padding: 3px 10px;
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: background var(--transition-fast);
+}
+
+.tagPill:hover {
+  background: rgba(0, 122, 255, 0.18);
+}
+
+.tagAddButton {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--text-tertiary);
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  padding: 0;
+  line-height: 1;
+  transition: border-color var(--transition-fast);
+}
+
+.tagAddButton:hover {
+  border-color: var(--text-secondary);
+}
+
+.tagDropdownWrapper {
+  position: relative;
+}
+
+.tagDropdown {
+  position: absolute;
+  top: 28px;
+  left: 0;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  min-width: 160px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.tagDropdownItem {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 8px 14px;
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-family: var(--font-family);
+}
+
+.tagDropdownItem:hover {
+  background: var(--bg-hover);
+}
+
+.tagCreateRow {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  border-top: 1px solid var(--border-color);
+  gap: 6px;
+}
+
+.tagCreateInput {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  outline: none;
+  font-family: var(--font-family);
+  color: var(--text-primary);
+}
+
+.tagCreateConfirm {
+  font-size: 12px;
+  background: var(--color-blue);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 3px 8px;
+  cursor: pointer;
+  font-family: var(--font-family);
+}
+
+/* Delete */
+.deleteRow {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-color);
+}
+
+.deleteButton {
+  background: none;
+  border: none;
+  color: var(--color-red);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: var(--font-family);
+  padding: 4px 0;
+}
+
+.deleteButton:hover {
+  opacity: 0.7;
+}
