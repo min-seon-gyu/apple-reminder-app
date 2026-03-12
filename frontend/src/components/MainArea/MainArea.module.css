@@ -12,3 +12,9 @@
   font-size: 15px;
   margin-top: 80px;
 }
+
+@media (max-width: 768px) {
+  .mainArea {
+    padding: 16px;
+  }
+}

@@ -21,3 +21,17 @@
   color: var(--text-secondary);
   opacity: 0.8;
 }
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 22px;
+  }
+
+  .count {
+    font-size: 18px;
+  }
+
+  .header {
+    padding-top: 48px;
+  }
+}

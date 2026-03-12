@@ -10,7 +10,7 @@
 .item {
   display: flex;
   align-items: flex-start;
-  padding: 10px 0;
+  padding: 10px 4px;
   gap: 10px;
   border-bottom: 1px solid var(--border-color);
   cursor: pointer;
@@ -23,7 +23,7 @@
 }
 
 .itemSelected {
-  background: var(--bg-hover);
+  background: var(--bg-selected);
 }
 
 /* Fade-out animation for completing */

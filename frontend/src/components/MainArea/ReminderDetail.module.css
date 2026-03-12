@@ -39,7 +39,7 @@
 }
 
 .titleInput:focus {
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--color-blue);
 }
 
 .notesInput {
@@ -57,7 +57,7 @@
 }
 
 .notesInput:focus {
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--color-blue);
 }
 
 .dateInput {
