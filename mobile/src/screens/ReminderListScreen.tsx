@@ -109,41 +109,41 @@ export default function ReminderListScreen() {
 
   const renderSeparator = () => <View style={styles.separator} />;
 
-  if (loading) {
-    return (
-      <View style={[styles.container, styles.centerContent]}>
-        <ActivityIndicator size="large" color={listColor} />
-      </View>
-    );
-  }
-
   return (
     <GestureHandlerRootView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={[styles.title, { color: listColor }]}>{title}</Text>
-        <Text style={[styles.count, { color: listColor }]}>{topLevelReminders.length}</Text>
-      </View>
-
-      <FlatList
-        data={topLevelReminders}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderItem}
-        ItemSeparatorComponent={renderSeparator}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        style={styles.list}
-        contentContainerStyle={topLevelReminders.length === 0 ? styles.emptyContainer : undefined}
-        ListEmptyComponent={
-          <View style={styles.emptyView}>
-            <Text style={styles.emptyText}>리마인더 없음</Text>
+      {loading ? (
+        <View style={styles.centerContent}>
+          <ActivityIndicator size="large" color={listColor} />
+        </View>
+      ) : (
+        <>
+          <View style={styles.header}>
+            <Text style={[styles.title, { color: listColor }]}>{title}</Text>
+            <Text style={[styles.count, { color: listColor }]}>{topLevelReminders.length}</Text>
           </View>
-        }
-      />
 
-      {!isCompleted && (
-        <TouchableOpacity style={styles.addButton} onPress={handleNewReminder}>
-          <Ionicons name="add-circle-outline" size={22} color={listColor} />
-          <Text style={[styles.addText, { color: listColor }]}>새 리마인더</Text>
-        </TouchableOpacity>
+          <FlatList
+            data={topLevelReminders}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderItem}
+            ItemSeparatorComponent={renderSeparator}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            style={styles.list}
+            contentContainerStyle={topLevelReminders.length === 0 ? styles.emptyContainer : undefined}
+            ListEmptyComponent={
+              <View style={styles.emptyView}>
+                <Text style={styles.emptyText}>리마인더 없음</Text>
+              </View>
+            }
+          />
+
+          {!isCompleted && (
+            <TouchableOpacity style={styles.addButton} onPress={handleNewReminder}>
+              <Ionicons name="add-circle-outline" size={22} color={listColor} />
+              <Text style={[styles.addText, { color: listColor }]}>새 리마인더</Text>
+            </TouchableOpacity>
+          )}
+        </>
       )}
     </GestureHandlerRootView>
   );

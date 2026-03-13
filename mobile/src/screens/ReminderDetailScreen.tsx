@@ -21,7 +21,7 @@ export default function ReminderDetailScreen() {
   const route = useRoute<Route>();
   const { reminderId, listId, mode } = route.params;
 
-  const { createReminder, updateReminder, deleteReminder, toggleComplete } = useReminderStore();
+  const { createReminder, updateReminder, deleteReminder, toggleComplete, fetchReminders } = useReminderStore();
   const reminders = useReminderStore((s) => s.reminders);
 
   const isCreate = mode === 'create';
@@ -93,19 +93,24 @@ export default function ReminderDetailScreen() {
 
   const handleSave = useCallback(async () => {
     if (isCreate || !reminder || savedRef.current) return;
-    if (!title.trim()) return;
+    const req = buildRequestRef.current();
+    if (!req.title?.trim()) return;
     savedRef.current = true;
-    await updateReminder(reminder.id, buildRequest());
-  }, [title, notes, dueDate, dueTime, priority, isFlagged, tagIds, reminder]);
+    await updateReminder(reminder.id, req);
+  }, [isCreate, reminder]);
+
+  const handleSaveRef = useRef(handleSave);
+  useEffect(() => {
+    handleSaveRef.current = handleSave;
+  });
 
   useEffect(() => {
     if (!isCreate) {
-      const unsubscribe = navigation.addListener('beforeRemove', () => {
-        handleSave();
+      return navigation.addListener('beforeRemove', () => {
+        handleSaveRef.current();
       });
-      return unsubscribe;
     }
-  }, [navigation, handleSave, isCreate]);
+  }, [navigation, isCreate]);
 
   const handleDelete = () => {
     Alert.alert('삭제', '이 리마인더를 삭제하시겠습니까?', [
@@ -129,6 +134,7 @@ export default function ReminderDetailScreen() {
       parentId: reminder.id,
       title: subtaskTitle.trim(),
     });
+    await fetchReminders(reminder.listId);
     setSubtaskTitle('');
   };
 

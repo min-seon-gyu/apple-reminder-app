@@ -14,9 +14,13 @@ export default function TagSelector({ selectedTagIds, onToggle, onCreateAndSelec
 
   const handleCreate = async () => {
     if (!newTagName.trim()) return;
-    const tag = await createTag(newTagName.trim());
-    onCreateAndSelect(tag.id);
-    setNewTagName('');
+    try {
+      const tag = await createTag(newTagName.trim());
+      onCreateAndSelect(tag.id);
+      setNewTagName('');
+    } catch {
+      // silently fail — store-level error handling applies
+    }
   };
 
   return (
