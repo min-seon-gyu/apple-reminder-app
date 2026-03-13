@@ -17,7 +17,7 @@ export default function SearchStack() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerBackTitleVisible: false,
+        headerBackButtonDisplayMode: 'minimal',
         headerStyle: { backgroundColor: '#F2F2F7' },
         headerShadowVisible: false,
       }}

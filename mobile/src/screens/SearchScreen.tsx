@@ -15,10 +15,10 @@ type Nav = StackNavigationProp<SearchStackParamList, 'Search'>;
 export default function SearchScreen() {
   const navigation = useNavigation<Nav>();
   const { searchReminders, toggleComplete, deleteReminder, updateReminder } = useReminderStore();
-  const reminders = useReminderStore((s) => s.reminders);
+  const reminders = useReminderStore((s) => s.searchResults);
   const addToast = useUiStore((s) => s.addToast);
   const [query, setQuery] = useState('');
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const handleSearch = useCallback((text: string) => {
     setQuery(text);

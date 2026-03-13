@@ -23,9 +23,11 @@ export default function ReminderDetailScreen() {
 
   const { createReminder, updateReminder, deleteReminder, toggleComplete, fetchReminders } = useReminderStore();
   const reminders = useReminderStore((s) => s.reminders);
+  const searchResults = useReminderStore((s) => s.searchResults);
 
   const isCreate = mode === 'create';
-  const reminder = reminders.flatMap((r) => [r, ...(r.subtasks ?? [])]).find((r) => r.id === reminderId);
+  const allItems = [...reminders, ...searchResults];
+  const reminder = allItems.flatMap((r) => [r, ...(r.subtasks ?? [])]).find((r) => r.id === reminderId);
 
   const [title, setTitle] = useState('');
   const [notes, setNotes] = useState('');
@@ -257,7 +259,7 @@ export default function ReminderDetailScreen() {
                 key={sub.id}
                 subtask={sub}
                 color="#007AFF"
-                onPress={() => {}}
+                onPress={() => (navigation as any).navigate('ReminderDetail', { reminderId: sub.id, mode: 'edit' })}
                 onToggle={() => toggleComplete(sub.id)}
               />
             ))}

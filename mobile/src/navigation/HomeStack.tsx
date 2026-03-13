@@ -24,7 +24,7 @@ export default function HomeStack() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerBackTitleVisible: false,
+        headerBackButtonDisplayMode: 'minimal',
         headerStyle: { backgroundColor: '#F2F2F7' },
         headerShadowVisible: false,
       }}
